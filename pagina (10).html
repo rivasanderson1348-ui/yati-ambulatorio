@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agendamiento de Citas - Red de Ambulatorios</title>
+    <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            --card-bg: rgba(255, 255, 255, 0.95);
+            --primary: #0284c7;
+            --primary-hover: #0369a1;
+            --accent: #22c55e;
+            --text-dark: #1e293b;
+            --text-muted: #64748b;
+            --border-radius: 20px;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background: var(--bg-gradient);
+            color: var(--text-dark);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 25px 15px;
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: var(--border-radius);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.35);
+            max-width: 520px;
+            width: 100%;
+            backdrop-filter: blur(12px);
+            animation: fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .header-brand {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .header-icon {
+            font-size: 50px;
+            margin-bottom: 10px;
+            display: inline-block;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+        }
+
+        h2 {
+            font-size: 26px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+            letter-spacing: -0.5px;
+        }
+
+        p.subtitle {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .form-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #334155;
+            margin-bottom: 6px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 13px 15px;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+            font-size: 14px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+            color: #0f172a;
+        }
+
+        input:focus, select:focus {
+            border-color: var(--primary);
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(2, 132, 199, 0.15);
+        }
+
+        .radio-group {
+            display: flex;
+            gap: 25px;
+            margin-top: 8px;
+            background: #f8fafc;
+            padding: 12px 15px;
+            border: 2px solid #cbd5e1;
+            border-radius: 12px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #334155;
+        }
+
+        .radio-option input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #0284c7, #0369a1);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(2, 132, 199, 0.35);
+            margin-top: 10px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(2, 132, 199, 0.45);
+            opacity: 0.95;
+        }
+
+        .slogan-footer {
+            text-align: center;
+            margin-top: 25px;
+            font-style: italic;
+            font-size: 13px;
+            color: #15803d;
+            font-weight: 700;
+            padding-top: 15px;
+            border-top: 2px dashed #bbf7d0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-brand">
+        <div class="header-icon">🏥</div>
+        <h2>Portal de Citas Médicas</h2>
+        <p class="subtitle">Red de Ambulatorios - Municipio Guaicaipuro</p>
+    </div>
+
+    <form id="citaForm" class="form-grid" onsubmit="enviarCita(event)">
+        
+        <div class="form-group">
+            <label for="nombres">Nombre y Apellido:</label>
+            <input type="text" id="nombres" required placeholder="Ej. María Rodríguez">
+        </div>
+
+        <div class="form-group">
+            <label for="cedula">Cédula:</label>
+            <input type="text" id="cedula" required placeholder="Ej. V-18234567">
+        </div>
+
+        <div class="form-group">
+            <label for="fechaNacimiento">Fecha de Nacimiento:</label>
+            <input type="date" id="fechaNacimiento" required>
+        </div>
+
+        <div class="form-group">
+            <label for="edad">Edad:</label>
+            <input type="number" id="edad" required placeholder="Ej. 32">
+        </div>
+
+        <div class="form-group">
+            <label>Sexo:</label>
+            <div class="radio-group">
+                <label class="radio-option">
+                    <input type="radio" name="sexo" value="F" required> Femenino
+                </label>
+                <label class="radio-option">
+                    <input type="radio" name="sexo" value="M" required> Masculino
+                </label>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" required placeholder="Ej. Urbanización El Encanto, Los Teques">
+        </div>
+
+        <div class="form-group">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" required placeholder="Ej. 04121234567">
+        </div>
+
+        <div class="form-group">
+            <label for="especialidad">Especialidad:</label>
+            <select id="especialidad" required>
+                <option value="" disabled selected>Seleccione una especialidad</option>
+                <option value="Pediatria">Pediatría</option>
+                <option value="Odontologia">Odontología</option>
+                <option value="Medicina General">Medicina General</option>
+                <option value="Obstetricia">Obstetricia</option>
+                <option value="Emergencia">Emergencia</option>
+            </select>
+        </div>
+
+        <button type="submit" class="btn-submit" id="btnEnviar">Agendar Cita Médica</button>
+    </form>
+
+    <div class="slogan-footer">
+        "Para su salud, Farith Fraija, su salud es lo importante."
+    </div>
+</div>
+
+<script>
+    function enviarCita(event) {
+        event.preventDefault();
+
+        const btn = document.getElementById('btnEnviar');
+        btn.innerText = "Registrando en el sistema...";
+        btn.disabled = true;
+
+        // TU LINK DE GOOGLE APPS SCRIPT CONFIGURADO ANTERIORMENTE:
+        const URL_GOOGLE_SHEETS = "https://script.google.com/macros/s/AKfycbxDTQd3c4xXjQQcLhsSPHdnQeDzczKLQwJIsX_ytpoh5avIP5alHLKbzxazNFPU69Qx/exec";
+        const sexoSeleccionado = document.querySelector('input[name="sexo"]:checked').value;
+        const especialidadSeleccionada = document.getElementById('especialidad').value;
+
+        const datosPaciente = {
+            nombres: document.getElementById('nombres').value.trim(),
+            cedula: document.getElementById('cedula').value.trim(),
+            fechaNacimiento: document.getElementById('fechaNacimiento').value,
+            edad: document.getElementById('edad').value.trim(),
+            sexo: sexoSeleccionado,
+            direccion: document.getElementById('direccion').value.trim(),
+            telefono: document.getElementById('telefono').value.trim(),
+            especialidad: especialidadSeleccionada
+        };
+
+        // Envío en tiempo real a Google Sheets
+        fetch(URL_GOOGLE_SHEETS, {
+            method: "POST",
+            mode: "no-cors",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(datosPaciente)
+        }).then(() => {
+            alert("¡Cita registrada con éxito en el sistema de la oficina!");
+            document.getElementById('citaForm').reset();
+            btn.innerText = "Agendar Cita Médica";
+            btn.disabled = false;
+        }).catch(error => {
+            console.error("Error:", error);
+            alert("Hubo un error al registrar la cita. Inténtalo de nuevo.");
+            btn.innerText = "Agendar Cita Médica";
+            btn.disabled = false;
+        });
+    }
+</script>
+
+</body>
+</html>
